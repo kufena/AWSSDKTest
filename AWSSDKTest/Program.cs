@@ -20,6 +20,7 @@ namespace AWSSDKTest
                 Console.WriteLine(buckets.BucketName + " date:" + buckets.CreationDate);
             }
 
+            Console.WriteLine("Thanks for all the fish");
         }
     }
 }

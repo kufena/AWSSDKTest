@@ -3,9 +3,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Amazon;
+using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using Amazon.Polly;
+using Amazon.Polly.Model;
+using System.Media;
 
 namespace AWSSDKTest
 {
@@ -34,6 +38,15 @@ namespace AWSSDKTest
                 }
             }
 
+            var pollyclient = new AmazonPollyClient();
+            SynthesizeSpeechRequest request = new SynthesizeSpeechRequest();
+            request.Text = "Hello my lovely little world.";
+            var pollyres = await pollyclient.SynthesizeSpeechAsync(request);
+            var file = new System.IO.BinaryWriter(pollyres.AudioStream);
+
+            var okater = new NetCoreAudio.Player();
+
+            await okater.Play("");
             Console.WriteLine("Thanks for all the fish");
         }
     }

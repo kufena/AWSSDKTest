@@ -10,6 +10,8 @@ using Amazon.S3.Transfer;
 using Amazon.Polly;
 using Amazon.Polly.Model;
 using System.Media;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace AWSSDKTest
 {
@@ -41,12 +43,25 @@ namespace AWSSDKTest
             var pollyclient = new AmazonPollyClient();
             SynthesizeSpeechRequest request = new SynthesizeSpeechRequest();
             request.Text = "Hello my lovely little world.";
+            request.OutputFormat = OutputFormat.Mp3;
+            request.VoiceId = VoiceId.Emma;
             var pollyres = await pollyclient.SynthesizeSpeechAsync(request);
-            var file = new System.IO.BinaryWriter(pollyres.AudioStream);
+            var fs = new FileStream("c:/tmp/hw.mp3", FileMode.Create);
+            var instr = pollyres.AudioStream;
 
+            byte[] bytes = new byte[256];
+            int count = 0;
+            while (true) //count < instr.Length)
+            {
+                int c = instr.Read(bytes, 0, 256);
+                if (c == 0) break;
+                fs.Write(bytes,0,c);
+                count += c;
+            }
+            fs.Close();
             var okater = new NetCoreAudio.Player();
 
-            await okater.Play("");
+            await okater.Play("c:/tmp/hw.mp3");
             Console.WriteLine("Thanks for all the fish");
         }
     }

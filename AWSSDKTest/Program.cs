@@ -61,8 +61,9 @@ namespace AWSSDKTest
             fs.Close();
             var okater = new NetCoreAudio.Player();
 
-            await okater.Play("c:/tmp/hw.mp3");
+            okater.Play("c:/tmp/hw.mp3").Wait();
             Console.WriteLine("Thanks for all the fish");
+            Console.ReadLine();
         }
     }
 }
